@@ -9,13 +9,13 @@ export class TasksController {
     constructor(private readonly taskService: TasksService) {}
 
     @Get()
-    findAll() {
-        return this.taskService.listAllTasks()
+    async findAll() {
+        return await this.taskService.listAllTasks()
     }
 
     @Get(':id')
-    findOneTask(@Param('id', ParseIntPipe) id: number) {
-        return this.taskService.findOne(id)
+    async findOneTask(@Param('id', ParseIntPipe) id: number) {
+        return await this.taskService.findOne(id)
     }
 
     @Post()
