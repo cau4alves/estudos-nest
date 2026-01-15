@@ -61,14 +61,22 @@ export class TasksService {
         return task
     }
 
-    delete(id: number) {
-        const taskIndex = this.tasks.findIndex( task => Number(id) === task.id)
+    async delete(id: number) {
+        const findTask = await this.prisma.task.findFirst({
+            where: {
+                id: id
+            }
+        })
 
-        if(taskIndex < 0) {
+        if(!findTask) {
             throw new NotFoundException('Tarefa não encontrada')
         }
 
-        this.tasks.splice(taskIndex, 1)
+        await this.prisma.task.delete({
+            where: {
+                id: id
+            }
+        })
 
         return 'Tarefa deletada com sucesso'
     }
