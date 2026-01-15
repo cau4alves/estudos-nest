@@ -3,6 +3,7 @@ import { Task } from './entities/task.entity';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PaginationDTO } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class TasksService {
@@ -13,8 +14,16 @@ export class TasksService {
         { id: 1, name: 'Caua', description: 'NestJs', completed: false }
     ]
 
-    async listAllTasks() {
-        const allTasks = await this.prisma.task.findMany()
+    async listAllTasks(paginationDTO?: PaginationDTO) {
+        const { limit = 10, offset = 0} = paginationDTO ?? {};
+
+        const allTasks = await this.prisma.task.findMany({
+            take: limit,
+            skip: offset,
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
         return allTasks;
     }
 

@@ -1,16 +1,17 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './entities/task.entity';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
+import { PaginationDTO } from 'src/common/dto/pagination.dto';
 
 @Controller('tasks')
 export class TasksController {
     constructor(private readonly taskService: TasksService) {}
 
     @Get()
-    async findAll() {
-        return await this.taskService.listAllTasks()
+    async findAll(@Query() paginationDTO: PaginationDTO) {
+        return await this.taskService.listAllTasks(paginationDTO)
     }
 
     @Get(':id')
