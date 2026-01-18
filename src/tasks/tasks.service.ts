@@ -10,10 +10,6 @@ export class TasksService {
 
     constructor(private prisma: PrismaService) {}
 
-    private tasks: Task[] = [
-        { id: 1, name: 'Caua', description: 'NestJs', completed: false }
-    ]
-
     async listAllTasks(paginationDTO?: PaginationDTO) {
         const { limit = 10, offset = 0} = paginationDTO ?? {};
 
