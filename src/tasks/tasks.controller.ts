@@ -5,6 +5,8 @@ import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { PaginationDTO } from 'src/common/dto/pagination.dto';
 import { LoggerInterceptor } from 'src/common/interceptors/logger.interceptor';
+import { BodyCreateTaskInterceptor } from 'src/common/interceptors/body-create-task.interceptor';
+import { AddHeaderInterceptor } from 'src/common/interceptors/add-headers.interceptor';
 
 @Controller('tasks')
 export class TasksController {
@@ -12,6 +14,7 @@ export class TasksController {
 
     @Get()
     @UseInterceptors(LoggerInterceptor)
+    @UseInterceptors(AddHeaderInterceptor)
     async findAll(@Query() paginationDTO: PaginationDTO) {
         return await this.taskService.listAllTasks(paginationDTO)
     }
@@ -22,6 +25,7 @@ export class TasksController {
     }
 
     @Post()
+    @UseInterceptors(BodyCreateTaskInterceptor)
     createTask(@Body() body: CreateTaskDTO) {
         return this.taskService.create(body)
     }
