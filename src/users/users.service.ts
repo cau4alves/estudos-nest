@@ -42,7 +42,6 @@ export class UsersService {
 
             return user
         } catch (error) {
-            console.log(error)
             throw new BadRequestException('Falha ao cadastrar usuário')
         }
     }
@@ -76,8 +75,29 @@ export class UsersService {
 
             return updatedUser
         } catch (error) {
-            console.log(error)
             throw new BadRequestException('Falha ao atualizar o usuário')
+        }
+    }
+
+    async delete(id: number) {
+        try {
+            const user = await this.prisma.user.findFirst({
+                where: { id: id }
+            })
+
+            if(!user) {
+                throw new NotFoundException('Usuário não encontrado')
+            }
+
+            await this.prisma.user.delete({
+                where: { id: user.id }
+            })
+
+            return {
+                message: 'Usuário deletado com sucesso'
+            }
+        } catch(error) {
+            throw new BadRequestException('Falha ao deletar o usuário')
         }
     }
 }
