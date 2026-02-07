@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Task } from './entities/task.entity';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
@@ -36,15 +36,20 @@ export class TasksService {
     }
 
     async create(body: CreateTaskDTO) {
-        const newTask = await this.prisma.task.create({
-            data: {
-                name: body.name,
-                description: body.description,
-                completed: false
-            }
-        })   
+        try {
+            const newTask = await this.prisma.task.create({
+                data: {
+                    name: body.name,
+                    description: body.description,
+                    completed: false,
+                    userId: body.userId
+                }
+            })   
 
-        return newTask
+            return newTask
+        } catch(error) {
+            throw new BadRequestException('Falha ao cadastrar tarefa')
+        }
     }
 
     async update(id: number, body: UpdateTaskDTO) {
@@ -60,7 +65,11 @@ export class TasksService {
 
         const task = await this.prisma.task.update({
             where: { id: id},
-            data: body
+            data: {
+                name: body?.name ? body.name : findTask.name,
+                description: body?.description ? body.description : findTask.description,
+                completed: body?.completed ? body.completed : findTask.completed
+            }
         })
 
         return task

@@ -13,8 +13,8 @@ export class TasksController {
     constructor(private readonly taskService: TasksService) {}
 
     @Get()
-    @UseInterceptors(LoggerInterceptor)
-    @UseInterceptors(AddHeaderInterceptor)
+    //@UseInterceptors(LoggerInterceptor)
+    //@UseInterceptors(AddHeaderInterceptor)
     async findAll(@Query() paginationDTO: PaginationDTO) {
         return await this.taskService.listAllTasks(paginationDTO)
     }
