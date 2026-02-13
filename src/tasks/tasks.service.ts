@@ -92,6 +92,8 @@ export class TasksService {
             }
         })
 
-        return 'Tarefa deletada com sucesso'
+        return {
+            message: 'Tarefa Deletada com sucesso'
+        }
     }
 }
