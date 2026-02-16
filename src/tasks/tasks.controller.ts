@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseFilters, UseInterceptors } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './entities/task.entity';
 import { CreateTaskDTO } from './dto/create-task.dto';
@@ -7,8 +7,10 @@ import { PaginationDTO } from 'src/common/dto/pagination.dto';
 import { LoggerInterceptor } from 'src/common/interceptors/logger.interceptor';
 import { BodyCreateTaskInterceptor } from 'src/common/interceptors/body-create-task.interceptor';
 import { AddHeaderInterceptor } from 'src/common/interceptors/add-headers.interceptor';
+import { ApiExceptionFilter } from 'src/common/filters/exception-filter';
 
 @Controller('tasks')
+// @UseFilters(ApiExceptionFilter)
 export class TasksController {
     constructor(private readonly taskService: TasksService) {}
 
