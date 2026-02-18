@@ -3,10 +3,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { throwError } from 'rxjs';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { HashingServiceProtocol } from 'src/auth/hash/hashing.service';
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private readonly hashingService: HashingServiceProtocol
+    ) { }
 
     async findOne(id: number) {
         const user = await this.prisma.user.findFirst({
@@ -28,11 +32,13 @@ export class UsersService {
 
     async create(body: CreateUserDTO) {
         try {
+            const passwordHashed = await this.hashingService.hash(body.password)
+
             const user = await this.prisma.user.create({
                 data: {
                     name: body.name,
                     email: body.email,
-                    passwordHash: body.password
+                    passwordHash: passwordHashed
                 },
                 select: {
                     id: true,

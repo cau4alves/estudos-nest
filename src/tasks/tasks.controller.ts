@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Patch, Post, Query, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './entities/task.entity';
 import { CreateTaskDTO } from './dto/create-task.dto';
@@ -14,7 +14,9 @@ import { AuthAdminGuard } from 'src/common/guards/admin.guard';
 @UseGuards(AuthAdminGuard)
 // @UseFilters(ApiExceptionFilter)
 export class TasksController {
-    constructor(private readonly taskService: TasksService) {}
+    constructor(
+        private readonly taskService: TasksService,
+    ) {}
 
     @Get()
     @UseInterceptors(LoggerInterceptor)
