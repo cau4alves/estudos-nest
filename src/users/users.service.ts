@@ -65,13 +65,22 @@ export class UsersService {
                 throw new NotFoundException('Usuário não encontrado')
             }
 
+            const dataUser: {name?: string, passwordHash?: string} = {
+                name: body.name ? body.name : user.name
+            }
+
+            if(body?.password) {
+                const passwordHash = await this.hashingService.hash(body?.password)
+                dataUser['passwordHash'] = passwordHash
+            }
+
             const updatedUser = await this.prisma.user.update({
                 where: {
                     id: user.id
                 }, 
                 data: {
-                    name: body.name ? body.name : user.name,
-                    passwordHash: body.password ? body.password : user.passwordHash
+                    name: dataUser.name,
+                    passwordHash: dataUser?.passwordHash ? dataUser?.passwordHash : user.passwordHash
                 },
                 select: {
                     id: true,
